@@ -1,0 +1,19 @@
+#!/bin/bash
+# MCP 配置脚本示例
+# 
+# 使用方法：
+# 1. 复制此文件为 .mcp-config.sh
+# 2. 取消注释并修改下面的 MCP 服务器配置
+# 3. 容器启动时会自动执行此脚本
+
+# 示例：添加 web-search-prime MCP 服务器
+# claude mcp add -s user -t http web-search-prime \
+#   https://open.bigmodel.cn/api/mcp/web_search_prime/mcp \
+#   --header "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# 示例：添加更多 MCP 服务器
+# claude mcp add -s user -t http another-mcp \
+#   https://example.com/mcp \
+#   --header "Authorization: Bearer YOUR_TOKEN"
+
+echo "MCP 配置脚本已执行（如果已配置）"

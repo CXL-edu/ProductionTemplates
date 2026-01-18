@@ -1,0 +1,16 @@
+{
+    "name": "PROJECT_NAME Dev",  // 修改为你的项目名称，例如: "MyProject Dev"
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "claude-code",
+    "workspaceFolder": "/workspace",
+    // 注意：MCP 配置现在通过 entrypoint.sh 自动处理
+    // 方式 1: 在项目根目录创建 .mcp-config.sh 文件
+    // 方式 2: 在 docker-compose.yml 中设置 MCP_SERVERS 环境变量
+    "customizations": {
+        "vscode": {
+            "extensions": ["dbaeumer.vscode-eslint"]
+            // 可以在这里添加其他 VS Code 扩展
+        }
+    }
+}
+

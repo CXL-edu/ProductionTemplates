@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  claude-code:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: PROJECT_NAME-claude-code  # 修改为你的项目名称，例如: myproject-claude-code
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    command: sleep infinity 
+    # 从 .env 文件加载环境变量（如果存在）
+    # 建议使用 .env 文件管理敏感配置，而不是直接写在这里
+    env_file:
+      - .env
+    # 环境变量（从 .env 文件读取，或使用默认值）
+    environment:
+      - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL:-https://open.bigmodel.cn/api/anthropic}
+      - GIT_USER_NAME=${GIT_USER_NAME:-}
+      - GIT_USER_EMAIL=${GIT_USER_EMAIL:-}
+    volumes:
+      - .:/workspace
+    restart: "no" # 在开发阶段建议设为 no，方便排查崩溃原因，在生产环境建议设为 unless-stopped
+    # 暂时注释掉 security_opt 和 cap_drop 以排除权限干扰
+    # security_opt:
+    #   - no-new-privileges:true
+    # cap_drop:
+    #   - ALL
+    networks:
+      - PROJECT_NAME-net  # 修改为你的项目名称，例如: myproject-net
+
+networks:
+  PROJECT_NAME-net:  # 修改为你的项目名称，例如: myproject-net
+    driver: bridge
+
