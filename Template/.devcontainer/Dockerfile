@@ -43,6 +43,39 @@ WORKDIR /workspace
 # 安装 Claude Code CLI 工具
 RUN npm install -g @anthropic-ai/claude-code
 
+# ============================================
+# 浏览器相关依赖（可选）
+# ============================================
+# 通过构建参数 ENABLE_BROWSER_MCP 控制是否安装浏览器依赖
+ARG ENABLE_BROWSER_MCP=false
+RUN if [ "$ENABLE_BROWSER_MCP" = "true" ]; then \
+    echo "安装浏览器相关依赖..." && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    chromium \
+    chromium-sandbox \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libatspi2.0-0 \
+    libxshmfence1 \
+    && rm -rf /var/lib/apt/lists/* && \
+    echo "安装 agent-browser CLI 工具..." && \
+    npm install -g agent-browser && \
+    echo "浏览器依赖安装完成"; \
+    else \
+    echo "跳过浏览器依赖安装（ENABLE_BROWSER_MCP=false）"; \
+    fi
+
 # 复制并设置入口脚本
 COPY .devcontainer/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

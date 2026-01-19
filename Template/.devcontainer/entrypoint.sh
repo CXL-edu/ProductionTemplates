@@ -30,6 +30,32 @@ if [ ! -f ~/.claude.json ] || ! grep -q "hasCompletedOnboarding" ~/.claude.json 
     fi
 fi
 
+# 初始化 agent-browser（如果启用了浏览器 MCP）
+# agent-browser 是一个独立的 CLI 工具，不是 MCP 服务器
+# 文档: https://github.com/vercel-labs/agent-browser
+if [ "$ENABLE_BROWSER_MCP" = "true" ] && command -v agent-browser &> /dev/null; then
+    echo "初始化 agent-browser..."
+    # agent-browser install 会检查并下载 Chromium（如果尚未安装）
+    # 系统依赖已在 Dockerfile 中安装，所以不需要 --with-deps
+    agent-browser install 2>/dev/null || echo "注意: agent-browser install 可能需要手动运行"
+
+    # 为 Claude Code 安装 agent-browser 官方提供的 Skill
+    # 参考文档中的示例命令：
+    #   mkdir -p .claude/skills/agent-browser
+    #   curl -o .claude/skills/agent-browser/SKILL.md \
+    #     https://raw.githubusercontent.com/vercel-labs/agent-browser/main/skills/agent-browser/SKILL.md
+    if [ -d /workspace ]; then
+        echo "为 Claude Code 安装 agent-browser Skill..."
+        mkdir -p /workspace/.claude/skills/agent-browser
+        if [ ! -f /workspace/.claude/skills/agent-browser/SKILL.md ]; then
+            curl -fsSL \
+              https://raw.githubusercontent.com/vercel-labs/agent-browser/main/skills/agent-browser/SKILL.md \
+              -o /workspace/.claude/skills/agent-browser/SKILL.md || \
+              echo "警告: 下载 agent-browser Skill 说明失败，请参考官方文档手动安装。"
+        fi
+    fi
+fi
+
 # 配置 MCP 服务器（如果存在配置文件）
 if [ -f /workspace/.mcp-config.sh ]; then
     echo "执行项目 MCP 配置脚本..."
