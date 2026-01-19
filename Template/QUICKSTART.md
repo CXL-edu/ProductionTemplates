@@ -10,7 +10,7 @@ cd /root/projects/datain/你的项目名
 
 ### 2️⃣ 修改项目名称
 ```bash
-sed -i 's/PROJECT_NAME/你的项目名/g' docker-compose.yml
+sed -i 's/PROJECT_NAME/你的项目名/g' docker compose.yml
 sed -i 's/PROJECT_NAME/你的项目名/g' .devcontainer/devcontainer.json
 ```
 
@@ -22,13 +22,13 @@ cp .env.example .env
 
 ### 4️⃣ 启动容器
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ## ✅ 验证
 
 ```bash
-docker-compose ps
+docker compose ps
 docker exec -it 你的项目名-claude-code /bin/bash
 claude-code --version
 ```

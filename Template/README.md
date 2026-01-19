@@ -6,7 +6,7 @@ Docker 容器项目模板，用于快速创建新的开发环境。
 
 ```
 Template/
-├── docker-compose.yml              # Docker Compose 配置文件
+├── docker compose.yml              # Docker Compose 配置文件
 ├── .env.example                    # 环境变量配置示例文件
 ├── .mcp-config.sh.example          # MCP 配置脚本示例
 ├── .gitignore                      # Git 忽略规则
@@ -28,7 +28,7 @@ cd /root/projects/datain/你的项目名
 
 ### 2. 修改项目名称
 ```bash
-sed -i 's/PROJECT_NAME/你的项目名/g' docker-compose.yml
+sed -i 's/PROJECT_NAME/你的项目名/g' docker compose.yml
 sed -i 's/PROJECT_NAME/你的项目名/g' .devcontainer/devcontainer.json
 ```
 
@@ -40,18 +40,18 @@ cp .env.example .env
 
 ### 4. 启动容器
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ## 📝 常用命令
 
 ```bash
 # 启动/停止
-docker-compose up -d
-docker-compose down
+docker compose up -d
+docker compose down
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 
 # 进入容器
 docker exec -it 你的项目名-claude-code /bin/bash
@@ -83,10 +83,10 @@ cp .mcp-config.sh.example .mcp-config.sh
 
 ```bash
 # 查看日志
-docker-compose logs
+docker compose logs
 
 # 检查配置
-docker-compose config
+docker compose config
 
 # 验证容器
 docker exec 你的项目名-claude-code claude-code --version
