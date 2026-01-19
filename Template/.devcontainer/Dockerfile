@@ -14,16 +14,15 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debia
 
 # 配置 npm 国内镜像源（淘宝镜像）
 # 使用 npmmirror.com（原淘宝镜像的新域名）
-RUN npm config set registry https://registry.npmmirror.com && \
-    npm config set disturl https://npmmirror.com/dist && \
-    npm config set electron_mirror https://npmmirror.com/mirrors/electron/ && \
-    npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass/ && \
-    npm config set puppeteer_download_host https://npmmirror.com/mirrors && \
-    npm config set chromedriver_cdnurl https://npmmirror.com/mirrors/chromedriver && \
-    npm config set operadriver_cdnurl https://npmmirror.com/mirrors/operadriver && \
-    npm config set phantomjs_cdnurl https://npmmirror.com/mirrors/phantomjs && \
-    npm config set selenium_cdnurl https://npmmirror.com/mirrors/selenium && \
-    npm config set node_inspector_cdnurl https://npmmirror.com/mirrors/node-inspector
+# 其他镜像配置（如 electron_mirror、sass_binary_site 等）需要通过环境变量设置
+RUN npm config set registry https://registry.npmmirror.com
+
+# 设置环境变量以加速特定包的下载（可选）
+# 这些环境变量在安装相应包时会被使用
+ENV ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \
+    SASS_BINARY_SITE=https://npmmirror.com/mirrors/node-sass/ \
+    PUPPETEER_DOWNLOAD_HOST=https://npmmirror.com/mirrors \
+    CHROMEDRIVER_CDNURL=https://npmmirror.com/mirrors/chromedriver
 
 # 安装基本工具
 RUN apt-get update && \
