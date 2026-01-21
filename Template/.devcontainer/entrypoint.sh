@@ -6,22 +6,6 @@ set -e
 
 echo "=== 容器启动初始化 ==="
 
-# 为所有用户（包括非 root）配置全局环境变量：
-# 统一从 /workspace/.env 加载，而不是一个个手写 export。
-echo "写入 /etc/profile.d/claude-env.sh（全局环境变量，自动加载 .env）..."
-cat >/etc/profile.d/claude-env.sh <<'EOF'
-# 为 Claude / MCP / 浏览器等工具提供统一的环境变量
-# 该文件会在所有用户的登录 shell 中被自动加载
-
-if [ -f /workspace/.env ]; then
-  # 自动将 .env 中的 KEY=VALUE 形式导出为环境变量
-  set -a
-  . /workspace/.env
-  set +a
-fi
-EOF
-chmod +x /etc/profile.d/claude-env.sh || true
-
 # 配置 Git（如果环境变量存在）
 if [ -n "$GIT_USER_NAME" ] && [ -n "$GIT_USER_EMAIL" ]; then
     echo "配置 Git 用户信息..."
@@ -44,6 +28,12 @@ if [ ! -f ~/.claude.json ] || ! grep -q "hasCompletedOnboarding" ~/.claude.json 
             echo '{"hasCompletedOnboarding": true}' > ~/.claude.json
         fi
     fi
+fi
+
+# 先配置 MCP 服务器（如果存在配置文件），避免后续步骤出错导致 MCP 没有被安装
+if [ -f /workspace/.mcp-config.sh ]; then
+    echo "执行项目 MCP 配置脚本..."
+    bash /workspace/.mcp-config.sh
 fi
 
 # 初始化 agent-browser（如果启用了浏览器 MCP）
@@ -70,12 +60,6 @@ if [ "$ENABLE_BROWSER_MCP" = "true" ] && command -v agent-browser &> /dev/null; 
               echo "警告: 下载 agent-browser Skill 说明失败，请参考官方文档手动安装。"
         fi
     fi
-fi
-
-# 配置 MCP 服务器（如果存在配置文件）
-if [ -f /workspace/.mcp-config.sh ]; then
-    echo "执行项目 MCP 配置脚本..."
-    bash /workspace/.mcp-config.sh
 fi
 
 echo "=== 初始化完成 ==="

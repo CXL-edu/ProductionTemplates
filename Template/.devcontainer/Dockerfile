@@ -34,6 +34,8 @@ RUN apt-get update && \
     git \
     jq \
     ca-certificates \
+    iputils-ping \
+    file \
     && rm -rf /var/lib/apt/lists/*
 
 # 设置工作目录
