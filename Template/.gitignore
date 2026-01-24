@@ -8,6 +8,9 @@
 # MCP 配置文件（可能包含敏感信息）
 .mcp-config.sh
 
+# Clash 配置目录（包含敏感配置文件，不应提交到 git）
+clash/
+
 # 日志文件
 *.log
 

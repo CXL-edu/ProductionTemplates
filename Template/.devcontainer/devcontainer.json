@@ -8,8 +8,30 @@
     // 方式 2: 在 docker-compose.yml 中设置 MCP_SERVERS 环境变量
     "customizations": {
         "vscode": {
-            "extensions": ["dbaeumer.vscode-eslint"]
-            // 可以在这里添加其他 VS Code 扩展
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                // Python 核心扩展
+                "ms-python.python",
+                "ms-python.vscode-pylance"
+            ],
+            "settings": {
+                // Python 配置
+                "python.defaultInterpreterPath": "/opt/conda/bin/python",
+                "python.condaPath": "/opt/conda/bin/conda",
+                "python.terminal.activateEnvironment": true,
+                "python.terminal.activateEnvInCurrentTerminal": true,
+                // Pylance 配置
+                "python.languageServer": "Pylance",
+                "python.analysis.typeCheckingMode": "basic",
+                "python.analysis.autoImportCompletions": true,
+                // 文件关联
+                "files.associations": {
+                    "*.py": "python",
+                    "*.pyi": "python",
+                    "*.pyx": "python",
+                    "*.pyw": "python"
+                }
+            }
         }
     }
 }

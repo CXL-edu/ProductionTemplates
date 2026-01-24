@@ -4,8 +4,9 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
       args:
-        # 从 .env 文件读取 ENABLE_BROWSER_MCP 变量，默认为 false
+        # 从 .env 文件读取构建参数
         ENABLE_BROWSER_MCP: ${ENABLE_BROWSER_MCP:-false}
+        MINIFORGE_VERSION: ${MINIFORGE_VERSION:-25.11.0-1}
     container_name: PROJECT_NAME-claude-code  # 修改为你的项目名称，例如: myproject-claude-code
     working_dir: /workspace
     tty: true
@@ -14,8 +15,27 @@ services:
     # 从 .env 文件加载环境变量
     env_file:
       - .env
+    # ports:
+    #   - "7890:7890" # 代理端口
+    #   - "9090:9090" # 控制面板端口
     volumes:
+      # 项目目录挂载：容器需要访问 .devcontainer 脚本、配置文件等才能正常运行
       - .:/workspace
+      # docker-volumes 绑定挂载：直接挂载宿主机目录，容器和宿主机文件互通
+      # 挂载策略：
+      #   1. 优先使用环境变量 DOCKER_VOLUMES_PATH（如果设置了）
+      #   2. 否则使用相对路径 ./docker-volumes（项目目录下的 docker-volumes 文件夹）
+      #   3. 如果项目目录下没有 docker-volumes，可以在 .env 中设置 DOCKER_VOLUMES_PATH 为绝对路径
+      # 容器内路径：/docker-volumes
+      # 注意：如果 docker-volumes 在项目目录下，也可以通过 /workspace/docker-volumes 访问
+      # 示例：在 .env 中设置 DOCKER_VOLUMES_PATH=/root/project/docker-volumes 使用绝对路径
+      - ${DOCKER_VOLUMES_PATH:-./docker-volumes}:/docker-volumes
+      
+    # TUN 模式配置（用于 DNS 劫持和透明代理）
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     restart: "no" # 在开发阶段建议设为 no，方便排查崩溃原因，在生产环境建议设为 unless-stopped
     # 暂时注释掉 security_opt 和 cap_drop 以排除权限干扰
     # security_opt:
@@ -29,3 +49,8 @@ networks:
   PROJECT_NAME-net:  # 修改为你的项目名称，例如: myproject-net
     driver: bridge
 
+# 注意：docker-volumes 已改为绑定挂载（bind mount），不再需要在此定义命名卷
+# 绑定挂载直接使用宿主机目录，容器和宿主机文件完全互通
+# volumes:
+#   docker-volumes:
+#     driver: local
