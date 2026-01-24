@@ -84,6 +84,7 @@ RUN apt-get update && \
     # 实用工具
     bc \
     dos2unix \
+    moreutils \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制 assets 目录（优先使用本地 Miniforge 安装包）
