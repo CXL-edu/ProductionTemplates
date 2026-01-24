@@ -68,6 +68,7 @@ RUN apt-get update && \
     iftop \
     # 文件搜索工具
     mlocate \
+    ripgrep \
     # 文本编辑器（轻量级替代）
     nano \
     # 文件比较工具
@@ -79,7 +80,6 @@ RUN apt-get update && \
     # 磁盘分析工具
     ncdu \
     # 其他压缩工具
-    unrar \
     xz-utils \
     # 实用工具
     bc \
